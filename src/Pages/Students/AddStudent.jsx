@@ -1,20 +1,31 @@
-import { useContext } from "react";
-import { DataContext } from "../../Store/store";
+import { MdDelete } from "react-icons/md";
 
-function StudentsList() {
-  const { studentsList, studentHeading } = useContext(DataContext);
-  console.log(studentHeading, "studentHeading");
+function AddStudent({addStudent , addStudentHeading , setAddStudent}) {
+
+
+  console.log(addStudent) 
+
+const handleDeleteBtn = (id) => {
+
+const isConfirmed = confirm("Are you sure you want to delete the user?");
+    if (isConfirmed) {
+        const removeItem = addStudent.filter((item) => item.id !== id);
+        setAddStudent(removeItem);
+    }
+}
+
+
 
   return (
     <>
-      {studentsList && studentsList.length > 0 ? (
+      {addStudent && addStudent.length > 0 ? (
         <div className="flex flex-col w-[97.5%] ">
           <div className="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div className="inline-block min-w-full overflow-hidden align-middle  shadow sm:rounded-lg border-b border-gray-200 ">
               <table className=" min-w-full">
                 <thead>
                   <tr>
-                    {studentHeading.map(({ headline }, index) => {
+                    {addStudentHeading.map(({ headline }, index) => {
                       return (
                         <th
                           key={index}
@@ -27,15 +38,14 @@ function StudentsList() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {studentsList.map(
+                  {addStudent.map(
                     (
-                      {
+                      { id,
                         avatar,
                         course,
                         description,
                         email,
                         name,
-                        status,
                         title,
                       },
                       index
@@ -69,15 +79,22 @@ function StudentsList() {
                               {description}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                            <span className="inline-flex px-2 text-xs font-semibold leading-5 text-yellow-800 bg-yellow-100 rounded-full">
-                              {status}
-                            </span>
-                          </td>
                           <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                             {course}
                           </td>
-                          
+                          <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+                            {/* <a
+                              href="#"
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Edit
+                            </a> */}
+                            <div className="flex justify-end items-start gap-2">
+                            <button type="button" className=" text-white bg-[#4f46e5]  font-medium rounded-lg text-sm px-5 py-2.5 mb-2">Edit</button>
+                            <button onClick={()=>handleDeleteBtn(id)} className="text-[35px] text-[#e02424]"><MdDelete /></button>
+                            </div>
+
+                          </td>
                         </tr>
                       );
                     }
@@ -94,4 +111,4 @@ function StudentsList() {
   );
 }
 
-export default StudentsList;
+export default AddStudent;
