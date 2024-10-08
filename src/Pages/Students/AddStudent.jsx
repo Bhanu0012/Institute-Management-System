@@ -1,9 +1,15 @@
+import { useContext } from "react";
 import { MdDelete } from "react-icons/md";
+import { DataContext } from "../../Store/store";
 
-function AddStudent({addStudent , addStudentHeading , setAddStudent}) {
+function AddStudent({addStudent , addStudentHeading , setAddStudent }) {
+
+const {handleUpdate} = useContext(DataContext)
 
 
-  console.log(addStudent) 
+
+
+
 
 const handleDeleteBtn = (id) => {
 
@@ -83,14 +89,9 @@ const isConfirmed = confirm("Are you sure you want to delete the user?");
                             {course}
                           </td>
                           <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-                            {/* <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit
-                            </a> */}
+                            
                             <div className="flex justify-end items-start gap-2">
-                            <button type="button" className=" text-white bg-[#4f46e5]  font-medium rounded-lg text-sm px-5 py-2.5 mb-2">Edit</button>
+                            <button  onClick={()=>handleUpdate(index)} type="button" className=" text-white bg-[#4f46e5]  font-medium rounded-lg text-sm px-5 py-2.5 mb-2">Edit</button>
                             <button onClick={()=>handleDeleteBtn(id)} className="text-[35px] text-[#e02424]"><MdDelete /></button>
                             </div>
 

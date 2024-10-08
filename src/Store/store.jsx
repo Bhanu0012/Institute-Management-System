@@ -31,15 +31,38 @@ function Store({ children }) {
 
   const [popup, setPopup] = useState(false);
 
+  const [btn, setBtn]=useState(false)
+
+
   const handleOnclick = () => {
+    setUpdateData('')
+    setBtn(false)
     setPopup(true);
   };
   const removeOnclick = () => {
     setPopup(false);
   };
-  const handleContentClick = (e) => {
-    e.stopPropagation();
-  };
+
+// Edit Student
+ const [updateData , setUpdateData]= useState([])
+
+
+const handleUpdate=(id)=>{
+  setBtn(true)
+ setPopup(true)
+ const updateData = addStudent[id]
+ console.log(updateData) 
+ setUpdateData(updateData) 
+}
+
+const handleContentClick = (e) => {
+  e.stopPropagation();
+};
+  
+
+
+
+
 
   // Add Student
 
@@ -114,6 +137,11 @@ function Store({ children }) {
         handleContentClick,
         setAddStudent,
         setPopup,
+        handleUpdate,
+        updateData,
+        setUpdateData, 
+        btn, 
+        setBtn
       }}
     >
       {children}

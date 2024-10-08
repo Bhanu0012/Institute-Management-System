@@ -3,20 +3,26 @@ import { DataContext } from "../../Store/store"
 
 function StudentDetailsForm() {
 
-const {handleContentClick , addStudent, setAddStudent ,setPopup} = useContext(DataContext)
+const {handleContentClick , addStudent, setAddStudent ,setPopup ,updateData, btn} = useContext(DataContext)
+
+console.log(updateData,"updateData")
 
 
-const [userProfile, setUserProfile] = useState("")
-const [userName, setUserName] = useState("")
-const [userEmail, setUserEmail] = useState("")
-const [instituteName, setInstituteName] = useState("")
-const [course, setCourse] = useState("")
+
+const [userProfile, setUserProfile] = useState(updateData?updateData.avatar:"")
+const [userName, setUserName] = useState(updateData?updateData.name:"")
+const [userEmail, setUserEmail] = useState(updateData?updateData.email:"")
+const [instituteName, setInstituteName] = useState(updateData?updateData.title:"")
+const [course, setCourse] = useState(updateData?updateData.course:"")
+
+
+
 
 const  handleStudentAdded = () =>{
-
+  
+  
 if(userProfile=== "" || userName=== "" || userEmail=== "" || instituteName=== "" || course=== ""){
 return alert("All fields Are Required")
-
 
 }
 
@@ -27,8 +33,6 @@ const newStudent= {
     title:instituteName,
     email:userEmail,
     name:userName,
-
-
 }
 setAddStudent([newStudent, ...addStudent])
 alert("Student added Sucessfully")
@@ -38,9 +42,50 @@ setUserEmail("")
 setInstituteName("")
 setCourse("")
 setPopup(false)
-  
-  
+}
+
+const handleStudentUpdate = () => {
+  if (userProfile === "" || userName === "" || userEmail === "" || instituteName === "" || course === "") {
+    return alert("All fields Are Required");
   }
+
+  setAddStudent((prevAddStudent) => {
+    const studentIndex = prevAddStudent.findIndex((student) => {
+      return (
+        student.id === updateData.id &&
+        student.email === updateData.email &&
+        student.course === updateData.course &&
+        student.title === updateData.title
+      );
+    });
+  
+    console.log(studentIndex, "studentIndex")
+  
+    if (studentIndex !== -1) {
+      prevAddStudent[studentIndex] = {
+        avatar: userProfile,
+        course: course,
+        title: instituteName,
+        email: userEmail,
+        name: userName,
+      };
+    }
+  
+    return [...prevAddStudent]; // Return a new array with the updated student
+  });
+
+  console.log(addStudent);
+
+  alert("Student Updated Successfully");
+  setUserProfile("");
+  setUserName("");
+  setUserEmail("");
+  setInstituteName("");
+  setCourse("");
+  setPopup(false);
+};
+
+
 
 
   return (
@@ -102,13 +147,19 @@ setPopup(false)
         >
           InstituteName 
         </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          onChange={(e)=> setInstituteName(e.target.value)}
-          value={instituteName}
-          placeholder="InstituteName"
-        />
+        
+<select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onChange={(e)=> setInstituteName(e.target.value)}
+          value={instituteName} form="carform" placeholder="Select your OPtion">
+   <option value="">Select your option</option>
+  <option value="saab">Saab</option>
+  <option value="opel">Opel</option>
+  <option value="audi">Audi</option>
+</select>
+
+
+
+
+
       </div>
       </div>
       <div className="mb-4">
@@ -129,12 +180,15 @@ setPopup(false)
     
 
   <div className="flex items-center justify-between">
-        <button onClick={handleStudentAdded}
+        <button onClick={btn?handleStudentUpdate:handleStudentAdded}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="button"
         >
-          Add Student
+          {btn?"Update Student":"Add Student"}
+          
         </button>
+        
+        {/* <button onClick={handleStudentUpdate}></button> */}
         
       </div>
     </form>
