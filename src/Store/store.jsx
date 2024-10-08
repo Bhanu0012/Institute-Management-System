@@ -27,6 +27,72 @@ function Store({ children }) {
     },
   ];
 
+  // Add Student button handle
+
+  const [popup, setPopup] = useState(false);
+
+  const [btn, setBtn]=useState(false)
+
+
+  const handleOnclick = () => {
+    setUpdateData('')
+    setBtn(false)
+    setPopup(true);
+  };
+  const removeOnclick = () => {
+    setPopup(false);
+  };
+
+// Edit Student
+ const [updateData , setUpdateData]= useState([])
+
+
+const handleUpdate=(id)=>{
+  setBtn(true)
+ setPopup(true)
+ const updateData = addStudent[id]
+ console.log(updateData) 
+ setUpdateData(updateData) 
+}
+
+const handleContentClick = (e) => {
+  e.stopPropagation();
+};
+  
+
+
+
+
+
+  // Add Student
+
+  const addStudentHeading = [
+    {
+      headline: "NAME",
+    },
+    {
+      headline: "INSTITUTION NAME",
+    },
+    {
+      headline: "COURSE ENROLLED",
+    },
+    {
+      headline: "",
+    },
+  ];
+
+  // Add Student API Data
+  const [addStudent, setAddStudent] = useState([]);
+  const addStudentData = async () => {
+    const listedStudent = await fetch(
+      "https://mocki.io/v1/f556c11e-4966-4fd8-a33b-9c26b4295d67"
+    );
+    const data = await listedStudent.json();
+    setAddStudent(data);
+  };
+  useEffect(() => {
+    addStudentData();
+  }, []);
   // Dashboard StudenList Headings
 
   const studentHeading = [
@@ -42,16 +108,13 @@ function Store({ children }) {
     {
       headline: "COURSE",
     },
-    {
-      headline: "",
-    },
   ];
 
   // Dashboard StudentList
   const [studentsList, setStudentList] = useState([]);
   const studentList = async () => {
     const studentListData = await fetch(
-      "https://mocki.io/v1/8887e39e-d2d4-4f0c-8438-60bf2c114119"
+      "https://mocki.io/v1/bab9648e-2c95-45a9-bc0b-6f9c92c3ca78"
     );
     const studentData = await studentListData.json();
     setStudentList(studentData);
@@ -61,7 +124,26 @@ function Store({ children }) {
   }, []);
 
   return (
-    <DataContext.Provider value={{ cardDAta, studentsList , studentHeading }}>
+    <DataContext.Provider
+      value={{
+        cardDAta,
+        studentsList,
+        studentHeading,
+        addStudentHeading,
+        addStudent,
+        handleOnclick,
+        removeOnclick,
+        popup,
+        handleContentClick,
+        setAddStudent,
+        setPopup,
+        handleUpdate,
+        updateData,
+        setUpdateData, 
+        btn, 
+        setBtn
+      }}
+    >
       {children}
     </DataContext.Provider>
   );
