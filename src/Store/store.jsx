@@ -31,39 +31,31 @@ function Store({ children }) {
 
   const [popup, setPopup] = useState(false);
 
-  const [btn, setBtn]=useState(false)
-
+  const [btn, setBtn] = useState(false);
 
   const handleOnclick = () => {
-    setUpdateData('')
-    setBtn(false)
+    setUpdateData("");
+    setBtn(false);
     setPopup(true);
   };
   const removeOnclick = () => {
     setPopup(false);
   };
 
-// Edit Student
- const [updateData , setUpdateData]= useState([])
+  // Edit Student
+  const [updateData, setUpdateData] = useState([]);
 
+  const handleUpdate = (id) => {
+    setBtn(true);
+    setPopup(true);
+    const updateData = addStudent[id];
+    console.log(updateData);
+    setUpdateData(updateData);
+  };
 
-const handleUpdate=(id)=>{
-  setBtn(true)
- setPopup(true)
- const updateData = addStudent[id]
- console.log(updateData) 
- setUpdateData(updateData) 
-}
-
-const handleContentClick = (e) => {
-  e.stopPropagation();
-};
-  
-
-
-
-
-
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
   // Add Student
 
   const addStudentHeading = [
@@ -123,6 +115,126 @@ const handleContentClick = (e) => {
     studentList();
   }, []);
 
+  // course page Api Data
+  const [Button, setButton] = useState(false);
+  const [course, setCourse] = useState([]);
+  const [courseImage, setCourseImage] = useState("");
+  const [courseName, setCourseName] = useState("");
+  useEffect(() => {
+    const showCourses = async () => {
+      const Course = await fetch(
+        "https://mocki.io/v1/edb1d2b9-c549-4b61-960e-1a72c10a0fa9"
+      );
+      const getCourses = await Course.json();
+      setCourse(getCourses);
+    };
+    showCourses();
+  }, []);
+
+  const [coursePopup, setCousePopup] = useState(false);
+  const handleCoursePopup = () => {
+    setCousePopup(true);
+    setButton(false);
+    setCourseImage("");
+    setCourseName("");
+  };
+  const removeCoursePopup = () => {
+    setCousePopup(false);
+  };
+  const contentCoursePopup = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleAddCourse = () => {
+    if (courseImage === "" || courseName === "") {
+      return alert("All Field Are Required");
+    }
+
+    const newCourseData = {
+      title: courseName,
+      image: courseImage,
+    };
+    setCourse([newCourseData, ...course]);
+    setCourseImage("");
+    setCourseName("");
+    setCousePopup(false);
+    setButton(false);
+  };
+
+  const deleteCourseItem = (id) => {
+    console.log(id);
+    const deleted = confirm("Are you Sure You want to delete the Course ?");
+
+    if (deleted) {
+      const remainingCourses = course.filter((items) => items.id !== id);
+      setCourse(remainingCourses);
+    }
+  };
+const [updateCourseData, setupdateCourseData] = useState([])
+  const editCourseData = (index) => {
+    setCousePopup(true);
+    const updateCourse = course[index];
+    
+    setCourseImage(updateCourse.image);
+    setCourseName(updateCourse.title);
+    setupdateCourseData(updateCourse)
+    setButton(true);
+  };
+
+  const handleCourseUpdate = () => {
+    if (courseImage === "" || courseName === "") {
+      return alert("All Field Are Required");
+    }
+    setCourse((prev) => {
+      const courseIndex = prev.findIndex((course) => {
+        return (
+          course.id === updateCourseData.id &&
+          course.image === updateCourseData.image &&
+          course.title === updateCourseData.title
+        );
+      });
+    
+     
+    
+      if (courseIndex !== -1) {
+        prev[courseIndex] = {
+          image: courseImage,
+          title: courseName,
+        };
+      }
+    
+      return [...prev];
+    });
+
+    setCousePopup(false);
+    setCourseImage("")
+    setCourseName("")
+  };
+
+
+// Announcement page 
+
+const [announce, setAnnounce ] = useState([])
+
+
+useEffect(()=>{
+
+const announcmentData = async() => {
+
+const getData = await fetch("https://mocki.io/v1/b7c9d543-769a-41f3-a683-0b6eba120d6b");
+const finalData = await getData.json();
+setAnnounce(finalData)
+}
+announcmentData()
+},[])
+
+
+
+
+
+
+
+
   return (
     <DataContext.Provider
       value={{
@@ -139,9 +251,25 @@ const handleContentClick = (e) => {
         setPopup,
         handleUpdate,
         updateData,
-        setUpdateData, 
-        btn, 
-        setBtn
+        setUpdateData,
+        btn,
+        setBtn,
+        course,
+        coursePopup,
+        handleCoursePopup,
+        removeCoursePopup,
+        contentCoursePopup,
+        courseImage,
+        setCourseImage,
+        courseName,
+        setCourseName,
+        handleAddCourse,
+        deleteCourseItem,
+        editCourseData,
+        Button,
+        setButton,
+        handleCourseUpdate,
+        announce,
       }}
     >
       {children}

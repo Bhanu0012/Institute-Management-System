@@ -1,8 +1,13 @@
 import React from 'react'
+import AnnouncementList from './AnnouncementList'
 
 function Announcement() {
   return (
-    <div>Announcement</div>
+   <>
+   <AnnouncementList/>
+   
+   
+   </>
   )
 }
 

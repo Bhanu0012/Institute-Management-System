@@ -5,7 +5,7 @@ function StudentDetailsForm() {
 
 const {handleContentClick , addStudent, setAddStudent ,setPopup ,updateData, btn} = useContext(DataContext)
 
-console.log(updateData,"updateData")
+
 
 
 
@@ -73,8 +73,6 @@ const handleStudentUpdate = () => {
   
     return [...prevAddStudent]; // Return a new array with the updated student
   });
-
-  console.log(addStudent);
 
   alert("Student Updated Successfully");
   setUserProfile("");
@@ -188,7 +186,7 @@ const handleStudentUpdate = () => {
           
         </button>
         
-        {/* <button onClick={handleStudentUpdate}></button> */}
+        
         
       </div>
     </form>
