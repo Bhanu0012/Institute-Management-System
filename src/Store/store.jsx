@@ -170,14 +170,14 @@ function Store({ children }) {
       setCourse(remainingCourses);
     }
   };
-const [updateCourseData, setupdateCourseData] = useState([])
+  const [updateCourseData, setupdateCourseData] = useState([]);
   const editCourseData = (index) => {
     setCousePopup(true);
     const updateCourse = course[index];
-    
+
     setCourseImage(updateCourse.image);
     setCourseName(updateCourse.title);
-    setupdateCourseData(updateCourse)
+    setupdateCourseData(updateCourse);
     setButton(true);
   };
 
@@ -193,42 +193,121 @@ const [updateCourseData, setupdateCourseData] = useState([])
           course.title === updateCourseData.title
         );
       });
-    
-     
-    
+
       if (courseIndex !== -1) {
         prev[courseIndex] = {
           image: courseImage,
           title: courseName,
         };
       }
-    
+
       return [...prev];
     });
 
     setCousePopup(false);
-    setCourseImage("")
-    setCourseName("")
+    setCourseImage("");
+    setCourseName("");
   };
 
+  // Announcement page
 
-// Announcement page 
+const [anTitle, setAnTitle] = useState("");
+const [anDes, setAnDes] = useState("");
+const [anbtn, setAnbtn] = useState(false);
 
-const [announce, setAnnounce ] = useState([])
 
+  const [announce, setAnnounce] = useState([]);
 
-useEffect(()=>{
+  useEffect(() => {
+    const announcmentData = async () => {
+      const getData = await fetch(
+        "https://mocki.io/v1/b7c9d543-769a-41f3-a683-0b6eba120d6b"
+      );
+      const finalData = await getData.json();
+      setAnnounce(finalData);
+    };
+    announcmentData();
+  }, []);
 
-const announcmentData = async() => {
+  const [announcPopup, setAnnouncePopup] = useState(false);
+  const handleAnnouncementPopup = () => {
+    setAnnouncePopup(true);
+  };
+  const removeAnnouncementPopup = () => {
+    setAnnouncePopup(false);
+    setAnbtn(false)
+    setAnDes("")
+    setAnTitle("")
+  };
+  const handleAnnouncmentContent = (e) => {
+    e.stopPropagation();
+  };
 
-const getData = await fetch("https://mocki.io/v1/b7c9d543-769a-41f3-a683-0b6eba120d6b");
-const finalData = await getData.json();
-setAnnounce(finalData)
+ 
+
+const handleAnFun = () => {
+const formData = {
+  title:anTitle,
+  description: anDes, 
 }
-announcmentData()
-},[])
+if(!formData.title || !formData.description ){
+  alert("All fields are required")
+  return 
+}
+
+setAnnounce([formData , ...announce])
+ setAnnouncePopup(false)
+ setAnbtn(false)
+  setAnDes("")
+  setAnTitle("")
+}
 
 
+const [updateAnData, setupdateAnData] = useState([]);
+
+
+
+const handleAnnEdit=(id)=>{
+  setAnnouncePopup(true);
+  setAnbtn(true)
+  const updateAn=announce[id];
+
+  setupdateAnData(updateAn);
+
+  setAnTitle(updateAn.title)
+  setAnDes(updateAn.description)
+  console.log(updateAn)
+}
+
+const updateAnFun=()=>{
+  if (anTitle === "" || anDes === "") {
+    return alert("All Field Are Required");
+  }
+
+  setAnnounce((prev) => {
+    const anIndex = prev.findIndex((course) => {
+      return (
+        // course.id === updateCourseData.id &&
+        course.title === updateAnData.title &&
+        course.description === updateAnData.description
+      );
+    });
+
+    if (anIndex !== -1) {
+      prev[anIndex] = {
+        title: anTitle,
+        description: anDes,
+      };
+    }
+
+    return [...prev];
+  });
+
+  setAnnouncePopup(false);
+  setAnbtn(false)
+  setAnTitle("");
+  setAnDes("");
+}
 
 
 
@@ -269,7 +348,20 @@ announcmentData()
         Button,
         setButton,
         handleCourseUpdate,
-        announce,
+        announce,setAnnounce,
+        handleAnnouncementPopup,
+        announcPopup,
+        removeAnnouncementPopup,
+        handleAnnouncmentContent,
+        anTitle, setAnTitle,
+        anDes, setAnDes,
+        handleAnFun,
+        handleAnnEdit, 
+        setAnbtn, anbtn, 
+        updateAnFun, 
+        // editAnData, 
+        // editAnData
+        // updateAnData, setupdateAnData
       }}
     >
       {children}
